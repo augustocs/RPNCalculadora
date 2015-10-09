@@ -1,8 +1,8 @@
 package rpncalculadora;
 
-//package rpncalculadoraJava;
-
+import com.sun.org.omg.CORBA.ParDescriptionSeqHelper;
 import java.util.Scanner;
+//import sun.io.Converters;
 
 public class Pilha {
     
@@ -37,111 +37,140 @@ public class Pilha {
         return this.pilha[this.posicaoPilha];
     }
  
-    public Object desempilhar() {
+    public double desempilhar() {
+        double nro=0;
+        
         //pop
         if (pilhaVazia()) { 
-            return null; 
+            return 0; 
         }
-        return this.pilha[this.posicaoPilha--];
+        Object loNro = this.pilha[this.posicaoPilha--];
+        
+        double lnNRO = (double)loNro;
+        
+        if (!loNro.equals(null)){
+            nro = (double) loNro;
+        }else{
+            nro = 0;
+        }        
+        return nro;
     } 
 
     public void empilhar(Object valor) { 
         // push
         if (this.posicaoPilha < this.pilha.length - 1) {
-
            this.pilha[++posicaoPilha] = valor; 
         } 
     }
     
-    public void menuPrincipal() throws Exception {
+    public static boolean verifNro (String s) {  
+      
+    try {  
+        Long.parseLong (s);   
+        return true;  
+    	} catch (NumberFormatException ex) {  
+        	return false;  
+    	}  
+	}
+  
+    public void Calculos() throws Exception {
         
         String condicao="N";
         double resultado = 0;
         Pilha p = new Pilha();
-        String opcao = "";
+        //String opcao = "";
 
         do
         {  
             Calculadora calc = new Calculadora();
             Scanner sc = new Scanner(System.in);
 
-            System.out.println("Calculadora RPN\n\n");
+            System.out.println("Calculadora RPN\nDigite as opções disponiveis: \n");
+            System.out.println(" - Digite um numero:\n");
+            System.out.println(" - Digite a operacao:\n");
+            System.out.println(" - Tecle enter:\n");
+            System.out.println(" C = Cancelar:\n");
+            System.out.println("Opcao: ");
+            String str = sc.nextLine();
+            
+            boolean validNro = verifNro(str);
+            double loNro = 0;
+            double loNro2 = 0;
+            
+            //  NUMERO
+            if(validNro){
+                p.empilhar(Double.parseDouble(str));
+            }   else   {
+                
+                loNro = p.desempilhar();
+                loNro2 = p.desempilhar();
+                        
+                switch (str) {
+                    //ENTER
+                    case "":
+                        p.empilhar(Double.parseDouble(str));
+                        break;
+                    //OPERACAO
+                    case "+":
+                        System.out.println("Funcao SOMAR:\n");
 
-            System.out.println("Digite um numero: \n");
-            double nro1 = sc.nextDouble();
-            p.empilhar(nro1);
+                        resultado = calc.somar(loNro, loNro2);
+                        p.empilhar(resultado);
+                        break;
 
-            System.out.println("Digite o segundo numero: \n");
-            double nro2 = sc.nextDouble();
-            p.empilhar(nro2);
+                    case "-":  //subtrair
+                        System.out.println("Funcao SUBTRACAO:\n");
 
-            System.out.println("Digite o operador: \n");
-            opcao = sc.next();
+                        resultado = calc.subtrair(loNro2, loNro);
+                        p.empilhar(resultado);                    
+                        break;
 
-           switch (opcao)
-            {
-                case "+":
+                    case "*":  //multiplicar
+                        System.out.println("Funcao MULTIPLICACAO:\n");
 
-                 p.desempilhar();
-                 System.out.println("Soma\n");
-                 p.desempilhar();
+                        resultado = calc.multiplicar(loNro, loNro2);
+                        p.empilhar(resultado);
+                        break;
 
-                 resultado = calc.somar(nro1, nro2);
-                 p.empilhar(resultado);
+                    case "/":  //dividir
+                        System.out.println("Funcao DIVISAO:\n");
+                        
+                        resultado = calc.dividir(loNro, loNro2);
+                        p.empilhar(resultado);
+                        break;
 
-                    break;
+                    case "%":  // porcentagem
+                        System.out.println("Funcao PORCENTAGEM:\n");
+                        
+                        resultado = calc.operacaoPorcent(loNro, loNro2);
+                        p.empilhar(resultado);  
 
-                case "-":  //subtrair
-                    p.desempilhar();
-                    System.out.println("Subtração\n");
-                    p.desempilhar();
-
-                    resultado = calc.subtrair(nro1, nro2);
-                    p.empilhar(resultado);                    
-                    break;
-
-                case "*":  //multiplicar
-                    p.desempilhar();
-                    System.out.println("Multiplicação\n");
-                    p.desempilhar();
-
-                    resultado = calc.multiplicar(nro1, nro2);
-                    p.empilhar(resultado);
-                    break;
-
-                case "/":  //dividir
-                    p.desempilhar();
-                    System.out.println("Divisão\n");
-                    p.desempilhar();
-
-                    resultado = calc.dividir(nro1, nro2);
-                    p.empilhar(resultado);
-                    break;
-
-                case "%":  // porcentagem
-                    p.desempilhar();
-                    System.out.println("Porcentagem\n");
-                    p.desempilhar();
-
-                    resultado = calc.operacaoPorcent(nro1, nro2);
-                    p.empilhar(resultado);  
-                    
-                    //System.out.println(p.exibeUltimoValor());
-                    break;
-
-                default:
-                    System.out.println("Informe um operador correto");
-                    break;                   
+                        break;
+                    case "C":
+                        resultado = -1;
+                        break;
+                    case "c":
+                        resultado = -1;
+                        break;
+                    default:
+                        System.out.println("Operador não identificado (+, -, /, *, %)");
+                        break;                   
+                }
+                if (resultado > 0){
+                     //Exibir resultado
+                     System.out.println("Resultado:" + resultado +"\n\n");
+                 }
             }
-
-           if (resultado >= 0){
-                //Exibir resultado
-                System.out.println("Resultado:" + resultado +"\n\n");
+            
+            if(!str.toUpperCase().equals("C")){
+                System.out.println("Adicionar novos valores SIM (S) ou NAO (N)\n");
+                Scanner sc2 = new Scanner(System.in);
+                condicao = sc.nextLine().toUpperCase();
+            } else {
+                System.out.println("Calculadora finalizada");
+                condicao = "N";
             }
-
-            System.out.println("Realizar nova operacao SIM (S) ou NAO (N)\n");
-            Scanner sc2 = new Scanner(System.in);
-            condicao = sc2.nextLine().toUpperCase();
-            } while( !"N".equals(condicao) );        
+            
+        } while( !"N".equals(condicao) );        
     }
 }
