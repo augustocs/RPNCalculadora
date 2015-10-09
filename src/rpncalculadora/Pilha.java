@@ -64,21 +64,18 @@ public class Pilha {
     }
     
     public static boolean verifNro (String s) {  
-      
     try {  
         Long.parseLong (s);   
         return true;  
-    	} catch (NumberFormatException ex) {  
-        	return false;  
-    	}  
-	}
-  
+    } catch (NumberFormatException ex) {  
+        return false;  
+    }  
+}  
     public void Calculos() throws Exception {
         
-        String condicao="N";
+        String condicao="S";
         double resultado = 0;
         Pilha p = new Pilha();
-        //String opcao = "";
 
         do
         {  
@@ -94,55 +91,69 @@ public class Pilha {
             String str = sc.nextLine();
             
             boolean validNro = verifNro(str);
-            double loNro = 0;
-            double loNro2 = 0;
+            double lNro = 0;
+            double lNro2 = 0;
             
             //  NUMERO
             if(validNro){
                 p.empilhar(Double.parseDouble(str));
             }   else   {
-                
-                loNro = p.desempilhar();
-                loNro2 = p.desempilhar();
-                        
+                                
                 switch (str) {
                     //ENTER
                     case "":
-                        p.empilhar(Double.parseDouble(str));
+                        double num = p.desempilhar();
+                        p.empilhar(num);
+                        p.empilhar(num);
                         break;
                     //OPERACAO
                     case "+":
                         System.out.println("Funcao SOMAR:\n");
-
-                        resultado = calc.somar(loNro, loNro2);
+                        
+                        lNro = p.desempilhar();
+                        lNro2 = p.desempilhar();
+                
+                        resultado = calc.somar(lNro, lNro2);
                         p.empilhar(resultado);
                         break;
 
                     case "-":  //subtrair
                         System.out.println("Funcao SUBTRACAO:\n");
 
-                        resultado = calc.subtrair(loNro2, loNro);
+                        lNro = p.desempilhar();
+                        lNro2 = p.desempilhar();
+                        
+                        resultado = calc.subtrair(lNro2, lNro);
                         p.empilhar(resultado);                    
                         break;
 
                     case "*":  //multiplicar
                         System.out.println("Funcao MULTIPLICACAO:\n");
-
-                        resultado = calc.multiplicar(loNro, loNro2);
+                        
+                        lNro = p.desempilhar();
+                        lNro2 = p.desempilhar();
+                        
+                        resultado = calc.multiplicar(lNro, lNro2);
                         p.empilhar(resultado);
                         break;
 
                     case "/":  //dividir
                         System.out.println("Funcao DIVISAO:\n");
+
+                        lNro = p.desempilhar();
+                        lNro2 = p.desempilhar();
                         
-                        resultado = calc.dividir(loNro, loNro2);
+                        resultado = calc.dividir(lNro, lNro2);
                         p.empilhar(resultado);
                         break;
 
                     case "%":  // porcentagem
                         System.out.println("Funcao PORCENTAGEM:\n");
                         
-                        resultado = calc.operacaoPorcent(loNro, loNro2);
+                        lNro = p.desempilhar();
+                        lNro2 = p.desempilhar();
+                        
+                        resultado = calc.operacaoPorcent(lNro, lNro2);
                         p.empilhar(resultado);  
 
                         break;
@@ -156,17 +167,13 @@ public class Pilha {
                         System.out.println("Operador não identificado (+, -, /, *, %)");
                         break;                   
                 }
-                if (resultado > 0){
+                if (resultado >= 0){
                      //Exibir resultado
                      System.out.println("Resultado:" + resultado +"\n\n");
                  }
             }
             
-            if(!str.toUpperCase().equals("C")){
-                System.out.println("Adicionar novos valores SIM (S) ou NAO (N)\n");
-                Scanner sc2 = new Scanner(System.in);
-                condicao = sc.nextLine().toUpperCase();
-            } else {
+            if(str.toUpperCase().equals("C")){
                 System.out.println("Calculadora finalizada");
                 condicao = "N";
             }

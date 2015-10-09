@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project basedir="." default="build" name="RPNCalculadora">
+  <property name="ant.build.javac.target" value="1.7"/>
     <property name="name" value="RPNCalculadora"/>
     <property location="${basedir}/build" name="build"/>
     <property location="${build}/classes" name="build.classes"/>

@@ -1,5 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package rpncalculadora;
 
+/**
+ *
+ * @author A.C.E.L
+ */
 public class Calculadora {
 
     public double somar(double nro1, double nro2)
